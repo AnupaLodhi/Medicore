@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediBridge AI — Healthcare Communication Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F2D52;--navy2:#0a1e38;--navy3:#1a4070;
+  --accent:#EAF3FF;--accent2:#c5dff8;
+  --red:#D32F2F;--red-bg:#FFF0F0;--red-border:#FFCDD2;
+  --green:#2E7D32;--green-bg:#F1F8E9;--green-border:#C5E1A5;
+  --amber:#E65100;--amber-bg:#FFF8E1;--amber-border:#FFCC02;
+  --purple:#4527A0;--purple-bg:#EDE7F6;
+  --border:#E0E6EF;--border2:#c8d6e8;
+  --bg:#F4F7FB;--bg2:#EBF1F9;
+  --text:#0F1E2D;--text2:#3A5068;--text3:#7A96B0;
+  --white:#FFFFFF;
+  --radius:10px;--radius2:16px;
+  --shadow:0 2px 8px rgba(15,45,82,0.08),0 0 0 1px rgba(15,45,82,0.04);
+  --shadow2:0 8px 32px rgba(15,45,82,0.12),0 0 0 1px rgba(15,45,82,0.06);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.page{display:none;flex:1}
+.page.active{display:flex;flex-direction:column}
+
+/* ── NAV ── */
+nav{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:#fff;font-weight:700;font-size:16px;letter-spacing:-0.3px;flex-shrink:0}
+.nav-logo-icon{width:32px;height:32px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-pills{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-pills::-webkit-scrollbar{display:none}
+.nav-pill{background:none;border:none;color:rgba(255,255,255,0.6);padding:6px 13px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap;transition:all .15s;font-family:inherit}
+.nav-pill:hover{color:#fff;background:rgba(255,255,255,0.1)}
+.nav-pill.active{color:#fff;background:rgba(255,255,255,0.18)}
+.sos-btn{background:var(--red);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;transition:background .15s;letter-spacing:0.3px;font-family:inherit}
+.sos-btn:hover{background:#b71c1c}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-left h1{font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-0.3px}
+.topbar-left p{font-size:13px;color:var(--text3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:20px;max-width:860px;width:100%;margin:0 auto}
+
+/* ── TABS ── */
+.tabs-bar{display:flex;gap:1px;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:18px}
+.tab-btn{flex:1;padding:8px 4px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;font-family:inherit}
+.tab-btn.active{background:var(--white);color:var(--navy);box-shadow:var(--shadow)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-sm{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:15px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px}
+.card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-blue{background:var(--accent)}
+.ci-red{background:var(--red-bg)}
+.ci-green{background:var(--green-bg)}
+.ci-amber{background:var(--amber-bg)}
+.ci-purple{background:var(--purple-bg)}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+
+/* ── FORM ── */
+.form-row{margin-bottom:12px}
+label.fl{display:block;font-size:12px;font-weight:600;color:var(--text3);letter-spacing:0.4px;text-transform:uppercase;margin-bottom:5px}
+input[type=text],input[type=tel],input[type=email],input[type=date],textarea,select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:inherit;outline:none;background:var(--white);color:var(--text);transition:border .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--navy)}
+textarea{resize:none}
+input[type=file]{display:none}
+input[type=checkbox],input[type=radio]{accent-color:var(--navy);width:15px;height:15px;cursor:pointer}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;line-height:1}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy2)}
+.btn-primary:disabled{background:#9FB4CC;cursor:not-allowed}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#b71c1c}
+.btn-outline{background:var(--white);color:var(--navy);border:1.5px solid var(--border2)}
+.btn-outline:hover{border-color:var(--navy);background:var(--accent)}
+.btn-ghost{background:none;color:var(--text2);border:none}
+.btn-ghost:hover{background:var(--bg2)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:#1b5e20}
+.btn-full{width:100%;padding:12px}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-icon{width:34px;height:34px;padding:0;border-radius:8px}
+
+/* ── UPLOAD AREA ── */
+.upload-area{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:18px 12px;background:var(--bg);margin-bottom:10px}
+.upload-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.upload-btn{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 8px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.upload-btn:hover{border-color:var(--navy);background:var(--accent)}
+.upload-btn svg{color:var(--navy)}
+.upload-btn span{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px}
+.upload-hint{font-size:11px;color:var(--text3);text-align:center}
+.preview-wrap{margin-top:10px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);position:relative}
+.preview-wrap img{width:100%;max-height:200px;object-fit:contain;background:#f8fafb;display:block}
+.preview-close{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.file-pill{background:var(--accent);border:1px solid var(--accent2);border-radius:var(--radius);padding:8px 12px;display:flex;align-items:center;gap:8px;margin-top:8px}
+.file-pill span{font-size:13px;color:var(--navy);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-clear{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:0.2px}
+.b-blue{background:var(--accent);color:var(--navy)}
+.b-green{background:var(--green-bg);color:var(--green)}
+.b-red{background:var(--red-bg);color:var(--red)}
+.b-amber{background:var(--amber-bg);color:var(--amber)}
+.b-purple{background:var(--purple-bg);color:var(--purple)}
+.b-gray{background:var(--bg2);color:var(--text3)}
+
+/* ── ALERTS ── */
+.alert{border-radius:var(--radius);padding:11px 14px;display:flex;align-items:flex-start;gap:9px;font-size:13px;margin-bottom:10px;border:1px solid}
+.a-blue{background:var(--accent);border-color:var(--accent2);color:var(--navy)}
+.a-amber{background:var(--amber-bg);border-color:var(--amber-border);color:#5D2E00}
+.a-red{background:var(--red-bg);border-color:var(--red-border);color:#7B0000}
+.a-green{background:var(--green-bg);border-color:var(--green-border);color:#1A3C00}
+.alert svg{flex-shrink:0;margin-top:1px}
+
+/* ── PHARMACY ITEMS ── */
+.pharm-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:8px;background:var(--white);cursor:pointer;transition:all .15s}
+.pharm-item:hover:not(.pharm-disabled){border-color:var(--navy);background:var(--accent)}
+.pharm-item.pharm-selected{border-color:var(--navy);background:var(--accent)}
+.pharm-item.pharm-disabled{opacity:.45;cursor:not-allowed}
+.pharm-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:14px;flex-shrink:0}
+.pharm-info strong{display:block;font-size:14px;font-weight:600;color:var(--text)}
+.pharm-info small{font-size:12px;color:var(--text3)}
+
+/* ── MEDICINE ROWS ── */
+.med-table{width:100%;border-collapse:collapse}
+.med-table th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;text-align:left;border-bottom:2px solid var(--border)}
+.med-table td{padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top}
+.med-table tr:last-child td{border-bottom:none}
+.med-row-inputs{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:var(--radius)}
+
+/* ── TRACKING ── */
+.track-steps{display:flex;flex-direction:column;gap:0}
+.track-step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.track-step:last-child{border-bottom:none}
+.track-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:1px}
+.td-done{background:var(--navy);color:#fff}
+.td-active{background:var(--accent);border:2px solid var(--navy);color:var(--navy);animation:pulse-ring 1.5s infinite}
+.td-wait{background:var(--bg2);color:var(--text3)}
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(15,45,82,.3)}50%{box-shadow:0 0 0 6px rgba(15,45,82,0)}}
+.track-content strong{display:block;font-size:14px;font-weight:500;color:var(--text)}
+.track-content small{font-size:12px;color:var(--text3)}
+.progress-bar{height:6px;background:var(--bg2);border-radius:3px;margin:12px 0;overflow:hidden}
+.progress-fill{height:100%;background:var(--navy);border-radius:3px;transition:width 1s ease}
+
+/* ── DELIVERY PARTNER ── */
+.partner-card{background:var(--accent);border:1px solid var(--accent2);border-radius:var(--radius2);padding:16px;display:flex;align-items:center;gap:14px}
+.partner-avatar{width:50px;height:50px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.partner-info strong{font-size:16px;font-weight:700;color:var(--navy);display:block}
+.partner-info small{font-size:12px;color:var(--text3)}
+.stars{color:#F59E0B;font-size:13px}
+
+/* ── STATS ── */
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow)}
+.stat-val{font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-0.5px;line-height:1}
+.stat-lbl{font-size:12px;color:var(--text3);margin-top:5px}
+.stat-change{font-size:11px;font-weight:600;margin-top:4px}
+.stat-up{color:var(--green)}
+.stat-down{color:var(--red)}
+
+/* ── HOME HERO ── */
+.hero{background:linear-gradient(160deg,var(--navy2) 0%,var(--navy) 50%,var(--navy3) 100%);color:#fff;padding:44px 24px 40px}
+.hero h1{font-size:clamp(24px,4vw,38px);font-weight:800;letter-spacing:-0.8px;line-height:1.15;margin-bottom:10px}
+.hero p{font-size:15px;opacity:.75;max-width:500px;line-height:1.6;margin-bottom:28px}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;max-width:720px}
+.hero-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:16px 14px;cursor:pointer;transition:all .2s;text-align:left}
+.hero-card:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.hero-card h3{font-size:13px;font-weight:700;margin:8px 0 3px;color:#fff}
+.hero-card p{font-size:11px;opacity:.65;color:#fff;line-height:1.4}
+.hero-sos{background:rgba(211,47,47,.85);border:1px solid rgba(255,100,100,.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;max-width:540px;margin-top:12px}
+.hero-sos:hover{background:var(--red)}
+.hero-sos h3{color:#fff;font-size:14px;font-weight:700;margin-bottom:2px}
+.hero-sos p{color:rgba(255,255,255,.75);font-size:12px}
+
+/* ── SPINNER ── */
+.spin{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite}
+.spin-navy{border-color:rgba(15,45,82,.15);border-top-color:var(--navy)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── PKG TOGGLE ── */
+.pkg-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border-radius:8px;margin-bottom:8px}
+.pkg-row label{flex:1;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;margin:0}
+
+/* ── BROADCAST ── */
+.broadcast-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;background:var(--white)}
+.bcast-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.bcast-contacting{background:var(--amber-border);animation:pulse-dot 1s infinite}
+.bcast-accepted{background:#4CAF50}
+.bcast-declined{background:var(--red)}
+.bcast-waiting{background:var(--border)}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── QUEUE CARD ── */
+.queue-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.queue-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:10px}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty svg{margin:0 auto 14px;display:block;opacity:.35}
+.empty p{font-size:14px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .g2,.g3{grid-template-columns:1fr}
+  .hero{padding:32px 16px 28px}
+  nav{padding:0 12px}
+  .content{padding:14px}
+  .topbar{padding:12px 16px}
+  .topbar-left h1{font-size:16px}
+  .g4{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home');return false">
+    <div class="nav-logo-icon">
+      <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+    </div>
+    MediBridge AI
+  </a>
+  <div class="nav-pills">
+    <button class="nav-pill active" onclick="showPage('home')">Home</button>
+    <button class="nav-pill" onclick="showPage('patient')">Patient</button>
+    <button class="nav-pill" onclick="showPage('doctor')">Doctor</button>
+    <button class="nav-pill" onclick="showPage('pharmacy')">Pharmacy</button>
+  </div>
+  <button class="sos-btn" onclick="showPage('emergency')">
+    <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+    Emergency
+  </button>
+</nav>
+
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>Connecting Healthcare,<br>Intelligently.</h1>
+    <p>One platform for doctors, patients, and pharmacies — with AI prescription analysis, multilingual voice, and emergency medicine delivery.</p>
+    <div class="hero-grid">
+      <div class="hero-card" onclick="showPage('patient')">
+        <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <h3>Patient Portal</h3>
+        <p>Prescriptions, AI explanations & reminders</p>
+      </div>
+      <div class="hero-card" onclick="showPage('doctor')">
+        <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <h3>Doctor Portal</h3>
+        <p>Digital Rx, QR codes & pharmacy send</p>
+      </div>
+      <div class="hero-card" onclick="showPage('pharmacy')">
+        <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M12 9v6"/></svg>
+        <h3>Pharmacy Portal</h3>
+        <p>Verify prescriptions & manage dispensing</p>
+      </div>
+    </div>
+    <div class="hero-sos" onclick="showPage('emergency')">
+      <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <div>
+        <h3>Can't reach a pharmacy?</h3>
+        <p>Emergency delivery — nearest pharmacy + gig pickup to your door</p>
+      </div>
+      <svg width="18" height="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </div>
+  <div class="content">
+    <div class="g4" style="margin-bottom:18px">
+      <div class="stat-card"><div class="stat-val">10</div><div class="stat-lbl">Indian languages supported</div></div>
+      <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">Portals connected in real time</div></div>
+      <div class="stat-card"><div class="stat-val">AI</div><div class="stat-lbl">Drug safety layer — interactions checked</div></div>
+      <div class="stat-card"><div class="stat-val">MIT</div><div class="stat-lbl">Open-source — free forever</div></div>
+    </div>
+    <div class="card" style="background:var(--accent);border-color:var(--accent2)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <svg width="22" height="22" fill="none" stroke="var(--navy)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        <div>
+          <div style="font-weight:700;color:var(--navy);font-size:14px">Open source · MIT license · v1.0.0</div>
+          <div style="font-size:12px;color:var(--text3)">github.com/AnupaLodhi/medi-bridge-ai</div>
+        </div>
+        <a href="https://github.com/AnupaLodhi/medi-bridge-ai" target="_blank" class="btn btn-outline btn-sm" style="margin-left:auto;flex-shrink:0">View repo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PATIENT ═══════════════════ -->
+<div id="page-patient" class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Patient Portal</h1>
+      <p>Your health, in plain language</p>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-danger btn-sm" onclick="showPage('emergency')">
+        <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Emergency
+      </button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('patient','upload',this)">Upload Prescription</button>
+      <button class="tab-btn" onclick="switchTab('patient','history',this)">My Prescriptions</button>
+      <button class="tab-btn" onclick="switchTab('patient','reminders',this)">Reminders</button>
+    </div>
+
+    <!-- Upload tab -->
+    <div id="patient-upload" class="tab-panel active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg></div>
+            Upload prescription or medicine image
+          </div>
+        </div>
+        <div class="upload-area" id="p-upload-area">
+          <div class="upload-btns">
+            <div class="upload-btn" onclick="document.getElementById('p-cam').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>Camera</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('p-gallery').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Gallery</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('p-file').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+              <span>Browse</span>
+            </div>
+          </div>
+          <div class="upload-hint">JPG, PNG or PDF &nbsp;·&nbsp; Max 10 MB</div>
+          <div id="p-preview"></div>
+        </div>
+        <input type="file" id="p-cam" accept="image/*" capture="environment" onchange="handleFile(this,'p-preview')">
+        <input type="file" id="p-gallery" accept="image/*" onchange="handleFile(this,'p-preview')">
+        <input type="file" id="p-file" accept="image/*,application/pdf" onchange="handleFile(this,'p-preview')">
+        <button class="btn btn-primary btn-full" id="p-analyse-btn" onclick="patientAnalyse()" style="margin-top:4px">Analyse with AI</button>
+      </div>
+
+      <div class="card" id="p-ai-card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-purple"><svg width="16" height="16" fill="none" stroke="var(--purple)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          AI Explanation
+        </div>
+        <div id="p-ai-result">
+          <div class="empty">
+            <svg width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            <p>Upload a prescription above to get a plain-language breakdown of your medicines</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History tab -->
+    <div id="patient-history" class="tab-panel">
+      <div class="queue-card">
+        <div class="queue-header">
+          <div>
+            <strong style="font-size:15px;color:var(--text)">Dr. Sharma — 12 Jun 2026</strong><br>
+            <small style="color:var(--text3)">City Hospital, Indore</small>
+          </div>
+          <span class="badge b-green">Dispensed</span>
+        </div>
+        <table class="med-table">
+          <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Amoxicillin 500mg</td><td>1 × 3 daily</td><td>5 days</td></tr>
+            <tr><td>Paracetamol 650mg</td><td>1 × 2 daily</td><td>3 days</td></tr>
+            <tr><td>Omeprazole 20mg</td><td>Before breakfast</td><td>5 days</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-outline btn-sm">Download PDF</button>
+          <button class="btn btn-outline btn-sm">Share via QR</button>
+        </div>
+      </div>
+      <div class="queue-card">
+        <div class="queue-header">
+          <div>
+            <strong style="font-size:15px;color:var(--text)">Dr. Mehta — 3 Jun 2026</strong><br>
+            <small style="color:var(--text3)">Apollo Clinic, Indore</small>
+          </div>
+          <span class="badge b-amber">Pending</span>
+        </div>
+        <table class="med-table">
+          <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Cetirizine 10mg</td><td>1 at night</td><td>7 days</td></tr>
+            <tr><td>Montelukast 5mg</td><td>1 at night</td><td>7 days</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-primary btn-sm" onclick="showPage('emergency')">Request Emergency Delivery</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminders tab -->
+    <div id="patient-reminders" class="tab-panel">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">Active reminders</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="card-sm" style="display:flex;align-items:center;gap:12px">
+            <div class="card-icon ci-amber"><svg width="16" height="16" fill="none" stroke="var(--amber)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">Amoxicillin 500mg</div>
+              <div style="font-size:12px;color:var(--text3)">8:00 AM · 2:00 PM · 8:00 PM</div>
+            </div>
+            <span class="badge b-green">Active</span>
+          </div>
+          <div class="card-sm" style="display:flex;align-items:center;gap:12px">
+            <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">Paracetamol 650mg</div>
+              <div style="font-size:12px;color:var(--text3)">8:00 AM · 8:00 PM</div>
+            </div>
+            <span class="badge b-green">Active</span>
+          </div>
+          <div class="card-sm" style="display:flex;align-items:center;gap:12px">
+            <div class="card-icon ci-red"><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">Omeprazole 20mg</div>
+              <div style="font-size:12px;color:var(--text3)">Before breakfast</div>
+            </div>
+            <span class="badge b-amber">Due now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ DOCTOR ═══════════════════ -->
+<div id="page-doctor" class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Doctor Portal</h1>
+      <p>Create prescriptions & send to pharmacy</p>
+    </div>
+    <div class="topbar-right">
+      <span class="badge b-green" style="font-size:12px;padding:5px 10px">Dr. Priya Sharma</span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('doctor','create',this)">New Prescription</button>
+      <button class="tab-btn" onclick="switchTab('doctor','send',this)">Send to Pharmacy</button>
+      <button class="tab-btn" onclick="switchTab('doctor','upload',this)">Upload Document</button>
+    </div>
+
+    <!-- Create tab -->
+    <div id="doctor-create" class="tab-panel active">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">
+          <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          Patient details
+        </div>
+        <div class="g2">
+          <div class="form-row"><label class="fl">Patient name</label><input type="text" id="d-name" placeholder="Full name"></div>
+          <div class="form-row"><label class="fl">Date</label><input type="date" id="d-date" value="2026-06-26"></div>
+        </div>
+        <div class="g2">
+          <div class="form-row"><label class="fl">Age</label><input type="text" id="d-age" placeholder="e.g. 34"></div>
+          <div class="form-row"><label class="fl">Gender</label><select><option>Male</option><option>Female</option><option>Other</option></select></div>
+        </div>
+        <div class="form-row"><label class="fl">Diagnosis</label><textarea rows="2" id="d-diag" placeholder="e.g. Upper respiratory tract infection"></textarea></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-green"><svg width="16" height="16" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></div>
+          Medicines
+        </div>
+        <div id="d-med-list">
+          <div class="med-row-inputs">
+            <input type="text" placeholder="Medicine name">
+            <input type="text" placeholder="Dose">
+            <input type="text" placeholder="Duration">
+            <input type="text" placeholder="Instructions (e.g. after meals)" style="grid-column:1/-1">
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="addMedRow()" style="margin-bottom:14px">+ Add medicine</button>
+        <div class="form-row"><label class="fl">Doctor's notes</label><textarea rows="2" id="d-notes" placeholder="Allergies, special instructions, or follow-up notes…"></textarea></div>
+      </div>
+
+      <div class="alert a-amber">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span>AI safety check runs automatically when you generate the prescription — drug interactions and dosage checks included.</span>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="generateRx()">Generate QR Prescription</button>
+
+      <div id="rx-output" style="display:none;margin-top:14px">
+        <div class="card" style="text-align:center;padding:28px 20px">
+          <div style="width:110px;height:110px;background:var(--navy);border-radius:14px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">
+            <svg width="56" height="56" fill="none" stroke="white" stroke-width="1.4" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>
+          </div>
+          <div class="badge b-green" style="margin:0 auto 10px">Prescription Generated</div>
+          <p style="font-size:13px;color:var(--text3);max-width:280px;margin:0 auto 18px">QR code is signed and ready — scannable at any MediBridge pharmacy</p>
+          <div class="alert a-amber" style="text-align:left;margin-bottom:14px">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            <span id="rx-alert-msg">No interactions found. Prescription is safe to dispense.</span>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="switchTab('doctor','send',document.querySelectorAll('#page-doctor .tab-btn')[1])">Send to Pharmacy</button>
+            <button class="btn btn-outline">Download PDF</button>
+            <button class="btn btn-outline">Share via WhatsApp</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send tab -->
+    <div id="doctor-send" class="tab-panel">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>
+          Package to send
+        </div>
+        <div class="pkg-row">
+          <svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <label>Digital prescription (QR-signed)</label>
+          <input type="checkbox" checked disabled>
+          <span class="badge b-blue">Required</span>
+        </div>
+        <div class="pkg-row">
+          <svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2m2-2h4a1 1 0 011 1v2H7V3a1 1 0 011-1h4z"/></svg>
+          <label for="inc-notes-d">Patient notes & allergies</label>
+          <input type="checkbox" id="inc-notes-d" checked>
+          <span class="badge b-gray">Optional</span>
+        </div>
+        <div class="pkg-row">
+          <svg width="16" height="16" fill="none" stroke="var(--amber)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <label for="inc-alerts-d">AI safety alerts</label>
+          <input type="checkbox" id="inc-alerts-d" checked>
+          <span class="badge b-amber">AI</span>
+        </div>
+        <div class="alert a-amber" style="margin-top:12px">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span>Alert: Patient allergic to Penicillin — pharmacist should verify Amoxicillin before dispensing.</span>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <label class="fl">Note to pharmacist</label>
+          <textarea rows="2" placeholder="e.g. Use generic substitute if branded unavailable"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+          Select pharmacy
+        </div>
+        <div id="d-pharm-list">
+          <div class="pharm-item" onclick="selectPharm(this,'1')">
+            <div class="pharm-avatar">M</div>
+            <div class="pharm-info"><strong>MedPlus Pharmacy</strong><small>Vijay Nagar · 0.8 km</small></div>
+            <span class="badge b-green">Open</span>
+          </div>
+          <div class="pharm-item" onclick="selectPharm(this,'2')">
+            <div class="pharm-avatar">A</div>
+            <div class="pharm-info"><strong>Apollo Pharmacy</strong><small>Palasia Square · 1.4 km</small></div>
+            <span class="badge b-green">Open</span>
+          </div>
+          <div class="pharm-item pharm-disabled">
+            <div class="pharm-avatar">J</div>
+            <div class="pharm-info"><strong>Jan Aushadhi Kendra</strong><small>Regal Square · 2.1 km</small></div>
+            <span class="badge b-red">Closed</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="d-send-success" style="display:none" class="alert a-green">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        <strong>Sent! The pharmacy has been notified and will prepare the medicines.</strong>
+      </div>
+      <button id="d-send-btn" class="btn btn-primary btn-full" onclick="doctorSend()">Send Prescription Package</button>
+    </div>
+
+    <!-- Upload tab -->
+    <div id="doctor-upload" class="tab-panel">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg></div>
+          Upload patient document
+        </div>
+        <div class="upload-area">
+          <div class="upload-btns">
+            <div class="upload-btn" onclick="document.getElementById('d-cam').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>Camera</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('d-gallery').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Gallery</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('d-file').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+              <span>Browse</span>
+            </div>
+          </div>
+          <div class="upload-hint">Lab reports, X-rays, previous records · Max 10 MB</div>
+          <div id="d-doc-preview"></div>
+        </div>
+        <input type="file" id="d-cam" accept="image/*" capture="environment" onchange="handleFile(this,'d-doc-preview')">
+        <input type="file" id="d-gallery" accept="image/*" onchange="handleFile(this,'d-doc-preview')">
+        <input type="file" id="d-file" accept="image/*,application/pdf" onchange="handleFile(this,'d-doc-preview')">
+        <div class="form-row" style="margin-top:12px"><label class="fl">Document type</label>
+          <select><option>Lab report</option><option>X-ray</option><option>Previous prescription</option><option>Other</option></select>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:4px">Attach to patient record</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PHARMACY ═══════════════════ -->
+<div id="page-pharmacy" class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Pharmacy Portal</h1>
+      <p>MedPlus Pharmacy, Vijay Nagar</p>
+    </div>
+    <div class="topbar-right">
+      <span class="badge b-red" id="ph-new-badge">3 new</span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('pharmacy','verify',this)">Verify Rx</button>
+      <button class="tab-btn" onclick="switchTab('pharmacy','queue',this)">Incoming Queue</button>
+      <button class="tab-btn" onclick="switchTab('pharmacy','emergency-ph',this)">Emergency Orders</button>
+    </div>
+
+    <!-- Verify -->
+    <div id="pharmacy-verify" class="tab-panel active">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-blue"><svg width="16" height="16" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M14 17h.01M17 14h.01M17 17h.01M20 14h.01M20 17h.01M20 20h.01"/></svg></div>
+          Scan or upload prescription
+        </div>
+        <div class="upload-area">
+          <div class="upload-btns">
+            <div class="upload-btn" onclick="document.getElementById('ph-cam').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>Scan QR</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('ph-gallery').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Gallery</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('ph-file').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+              <span>Browse</span>
+            </div>
+          </div>
+          <div class="upload-hint">Upload prescription or point camera at QR code</div>
+          <div id="ph-preview"></div>
+        </div>
+        <input type="file" id="ph-cam" accept="image/*" capture="environment" onchange="handleFile(this,'ph-preview');pharmVerify()">
+        <input type="file" id="ph-gallery" accept="image/*" onchange="handleFile(this,'ph-preview');pharmVerify()">
+        <input type="file" id="ph-file" accept="image/*,application/pdf" onchange="handleFile(this,'ph-preview');pharmVerify()">
+        <div id="ph-verify-result"></div>
+      </div>
+    </div>
+
+    <!-- Queue -->
+    <div id="pharmacy-queue" class="tab-panel">
+      <div class="alert a-blue" style="margin-bottom:12px">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>2 prescriptions waiting — 1 has a safety alert</span>
+      </div>
+
+      <div class="queue-card">
+        <div class="queue-header">
+          <div>
+            <strong style="font-size:15px">Rahul Verma, 34M</strong><br>
+            <small style="color:var(--text3)">From Dr. Sharma · 4 min ago</small>
+          </div>
+          <span class="badge b-red">⚠ Alert</span>
+        </div>
+        <table class="med-table" style="margin-bottom:10px">
+          <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Amoxicillin 500mg</td><td>1 × 3 daily</td><td>5 days</td></tr>
+            <tr><td>Paracetamol 650mg</td><td>1 × 2 daily</td><td>3 days</td></tr>
+            <tr><td>Omeprazole 20mg</td><td>Before meals</td><td>5 days</td></tr>
+          </tbody>
+        </table>
+        <div class="alert a-red">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span>Patient allergic to Penicillin — verify Amoxicillin is safe before dispensing</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-success" style="flex:1;padding:10px">Confirm & Dispense</button>
+          <button class="btn btn-outline" style="flex:1;padding:10px">Message Doctor</button>
+        </div>
+      </div>
+
+      <div class="queue-card">
+        <div class="queue-header">
+          <div>
+            <strong style="font-size:15px">Priya Singh, 28F</strong><br>
+            <small style="color:var(--text3)">From Dr. Mehta · 12 min ago</small>
+          </div>
+          <span class="badge b-blue">Ready</span>
+        </div>
+        <table class="med-table" style="margin-bottom:10px">
+          <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Cetirizine 10mg</td><td>1 at night</td><td>7 days</td></tr>
+            <tr><td>Montelukast 5mg</td><td>1 at night</td><td>7 days</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-success" style="flex:1;padding:10px">Confirm & Dispense</button>
+          <button class="btn btn-outline" style="flex:1;padding:10px">Suggest Generic</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency orders -->
+    <div id="pharmacy-emergency-ph" class="tab-panel">
+      <div class="alert a-red" style="margin-bottom:12px">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span>1 new emergency order — respond within 2 minutes or it's auto-forwarded</span>
+      </div>
+      <div class="queue-card" style="border-left:3px solid var(--red)">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse-dot 1s infinite"></div>
+          <span style="font-size:12px;font-weight:700;color:var(--red);letter-spacing:.3px">EMERGENCY ORDER</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:auto" id="ph-sos-ago">Just now</span>
+        </div>
+        <div style="font-size:14px;margin-bottom:4px"><strong>Patient:</strong> Rajesh Kumar · Vijay Nagar (1.2 km)</div>
+        <div style="font-size:14px;margin-bottom:4px"><strong>Medicine:</strong> Metformin 500mg × 30 tablets</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:14px">Diabetic patient · Prescription image uploaded · Urgent</div>
+        <div id="ph-timer" style="font-size:32px;font-weight:800;color:var(--red);text-align:center;margin-bottom:14px;letter-spacing:-1px">1:58</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-success btn-full" style="flex:1;padding:11px" onclick="pharmAcceptSOS()">Accept & Assign Delivery</button>
+          <button class="btn btn-outline btn-full" style="flex:1;padding:11px;color:var(--red);border-color:var(--red-border)" onclick="pharmDeclineSOS()">Decline</button>
+        </div>
+        <div id="ph-sos-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EMERGENCY ═══════════════════ -->
+<div id="page-emergency" class="page">
+  <div class="topbar" style="background:var(--red-bg);border-color:var(--red-border)">
+    <div class="topbar-left">
+      <h1 style="color:var(--red)">Emergency Delivery</h1>
+      <p style="color:#b71c1c">Medicine to your door — nearest pharmacy + gig pickup</p>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- FORM -->
+    <div id="sos-form">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-red"><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+          Upload medicine image or prescription
+        </div>
+        <div class="upload-area">
+          <div class="upload-btns">
+            <div class="upload-btn" onclick="document.getElementById('sos-cam').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>Camera</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('sos-gallery').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span>Gallery</span>
+            </div>
+            <div class="upload-btn" onclick="document.getElementById('sos-file').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+              <span>Browse</span>
+            </div>
+          </div>
+          <div class="upload-hint">Medicine packet photo, prescription, or doctor's note · Max 10 MB</div>
+          <div id="sos-preview"></div>
+        </div>
+        <input type="file" id="sos-cam" accept="image/*" capture="environment" onchange="handleFile(this,'sos-preview')">
+        <input type="file" id="sos-gallery" accept="image/*" onchange="handleFile(this,'sos-preview')">
+        <input type="file" id="sos-file" accept="image/*,application/pdf" onchange="handleFile(this,'sos-preview')">
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="card-icon ci-red"><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          Delivery address
+        </div>
+        <div class="form-row"><textarea id="sos-address" rows="2" placeholder="Enter your full delivery address…"></textarea></div>
+        <button class="btn btn-outline btn-sm" id="sos-loc-btn" onclick="sosDetectLocation()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Use my current location
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">Additional notes</div>
+        <textarea id="sos-notes" rows="2" placeholder="Allergies, urgency level, gate code, or any other instructions…"></textarea>
+      </div>
+
+      <button class="btn btn-danger btn-full" style="padding:14px;font-size:15px" onclick="submitSOS()">
+        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Send Emergency Request
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="sos-loading" style="display:none">
+      <div class="card" style="text-align:center;padding:50px 20px">
+        <div class="spin spin-navy" style="width:40px;height:40px;margin:0 auto 18px"></div>
+        <div id="sos-load-text" style="font-weight:700;font-size:16px;color:var(--navy)">Confirming your location…</div>
+        <div style="font-size:13px;color:var(--text3);margin-top:6px">Finding pharmacies within 5 km</div>
+      </div>
+    </div>
+
+    <!-- BROADCAST -->
+    <div id="sos-broadcast" style="display:none">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <div style="width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse-dot 1s infinite"></div>
+          <div class="card-title" style="margin:0;font-size:14px">Broadcasting to nearby pharmacies…</div>
+        </div>
+        <div id="sos-pharm-list">
+          <div class="broadcast-item" id="bph-1">
+            <div class="bcast-dot bcast-contacting" id="bph-1-dot"></div>
+            <div style="flex:1"><strong style="font-size:13px;display:block">MedPlus Pharmacy</strong><small style="color:var(--text3)">Vijay Nagar · 0.8 km</small></div>
+            <span class="badge b-amber" id="bph-1-badge">Checking stock…</span>
+          </div>
+          <div class="broadcast-item" id="bph-2" style="opacity:.5">
+            <div class="bcast-dot bcast-waiting" id="bph-2-dot"></div>
+            <div style="flex:1"><strong style="font-size:13px;display:block">Apollo Pharmacy</strong><small style="color:var(--text3)">Palasia Square · 1.4 km</small></div>
+            <span class="badge b-gray" id="bph-2-badge">Waiting…</span>
+          </div>
+          <div class="broadcast-item" id="bph-3" style="opacity:.5">
+            <div class="bcast-dot bcast-waiting" id="bph-3-dot"></div>
+            <div style="flex:1"><strong style="font-size:13px;display:block">Jan Aushadhi Kendra</strong><small style="color:var(--text3)">Regal Square · 2.1 km</small></div>
+            <span class="badge b-gray" id="bph-3-badge">Waiting…</span>
+          </div>
+          <div class="broadcast-item" id="bph-4" style="opacity:.5">
+            <div class="bcast-dot bcast-waiting" id="bph-4-dot"></div>
+            <div style="flex:1"><strong style="font-size:13px;display:block">Shalby Pharmacy</strong><small style="color:var(--text3)">Scheme 54 · 2.8 km</small></div>
+            <span class="badge b-gray" id="bph-4-badge">Waiting…</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);text-align:center;margin-top:12px">If all nearby decline, search auto-expands to 10 km radius</p>
+      </div>
+    </div>
+
+    <!-- TRACKING -->
+    <div id="sos-tracking" style="display:none">
+      <div class="alert a-green" style="margin-bottom:14px">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        <div><strong>Order accepted by Jan Aushadhi Kendra</strong><br><small>Regal Square, Indore · 2.1 km</small></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Live tracking</div>
+        <div class="progress-bar"><div class="progress-fill" id="sos-prog" style="width:20%"></div></div>
+        <div class="track-steps">
+          <div class="track-step">
+            <div class="track-dot td-done" id="ts-1">✓</div>
+            <div class="track-content"><strong>Order accepted by pharmacy</strong><small>Jan Aushadhi Kendra · 2.1 km</small></div>
+          </div>
+          <div class="track-step">
+            <div class="track-dot td-wait" id="ts-2">📦</div>
+            <div class="track-content"><strong>Medicines being packed</strong><small id="ts-2-s">Waiting…</small></div>
+          </div>
+          <div class="track-step">
+            <div class="track-dot td-wait" id="ts-3">🛵</div>
+            <div class="track-content"><strong>Delivery partner picked up</strong><small id="ts-3-s">Waiting…</small></div>
+          </div>
+          <div class="track-step">
+            <div class="track-dot td-wait" id="ts-4">✓</div>
+            <div class="track-content"><strong>Delivered to you</strong><small id="ts-4-s">Est. 15–20 min</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sos-partner-card" style="display:none;margin-bottom:14px">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:12px">Your delivery partner</div>
+          <div class="partner-card">
+            <div class="partner-avatar">R</div>
+            <div class="partner-info" style="flex:1">
+              <strong>Rahul Sharma</strong>
+              <small>Bike · MP 09 AB 1234</small>
+              <div class="stars" style="margin-top:3px">★★★★★ <span style="font-size:12px;color:var(--text3)">4.9</span></div>
+            </div>
+            <a href="tel:+911234567890" class="btn btn-primary btn-sm">Call</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="sos-delivered" style="display:none">
+        <div class="card" style="text-align:center;padding:32px 20px">
+          <div style="font-size:48px;margin-bottom:12px">✅</div>
+          <div style="font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-0.5px;margin-bottom:6px">Medicines Delivered</div>
+          <div style="font-size:14px;color:var(--text3);margin-bottom:20px">We hope you feel better soon.</div>
+          <button class="btn btn-outline" onclick="resetSOS()">Place another order</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end .app -->
+
+<script>
+// ── PAGE NAVIGATION ──────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const map = {home:0,patient:1,doctor:2,pharmacy:3};
+  if (map[id] !== undefined) document.querySelectorAll('.nav-pill')[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────
+function switchTab(page, tab, btn) {
+  const panelIds = {
+    patient: ['patient-upload','patient-history','patient-reminders'],
+    doctor:  ['doctor-create','doctor-send','doctor-upload'],
+    pharmacy:['pharmacy-verify','pharmacy-queue','pharmacy-emergency-ph'],
+  };
+  panelIds[page].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const target = document.getElementById(page + '-' + tab);
+  if (target) target.classList.add('active');
+  if (btn) {
+    document.querySelectorAll('#page-' + page + ' .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (page === 'pharmacy' && tab === 'emergency-ph' && !phTimerRunning) startPhTimer();
+}
+
+// ── FILE UPLOAD ───────────────────────────────────────────────
+function handleFile(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const el = document.getElementById(previewId);
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      el.innerHTML = `<div class="preview-wrap"><img src="${e.target.result}" alt="Preview"><button class="preview-close" onclick="clearPreview('${previewId}','${input.id}')">✕</button></div>`;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    el.innerHTML = `<div class="file-pill"><svg width="15" height="15" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><span>${file.name}</span><button class="file-clear" onclick="clearPreview('${previewId}','${input.id}')">✕</button></div>`;
+  }
+}
+function clearPreview(previewId, inputId) {
+  document.getElementById(previewId).innerHTML = '';
+  const inp = document.getElementById(inputId);
+  if (inp) inp.value = '';
+}
+
+// ── PATIENT ANALYSE ───────────────────────────────────────────
+function patientAnalyse() {
+  const btn = document.getElementById('p-analyse-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Analysing…';
+  const el = document.getElementById('p-ai-result');
+  el.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:8px 0"><span class="spin spin-navy"></span> Reading prescription…</div>';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = 'Analyse with AI';
+    el.innerHTML = `
+      <div class="alert a-green" style="margin-bottom:12px">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        <strong>3 medicines found · No dangerous interactions detected</strong>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="card-sm">
+          <div style="font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px">Amoxicillin 500mg <span class="badge b-blue" style="font-weight:400;font-size:11px">Antibiotic</span></div>
+          <div style="font-size:13px;color:var(--text2)">Take 1 capsule 3 times a day after meals for 5 days. Do not skip doses even if you feel better early.</div>
+        </div>
+        <div class="card-sm">
+          <div style="font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px">Paracetamol 650mg <span class="badge b-blue" style="font-weight:400;font-size:11px">Pain & fever</span></div>
+          <div style="font-size:13px;color:var(--text2)">Take 1 tablet twice daily or as needed for pain. Do not take more than 4 tablets in 24 hours.</div>
+        </div>
+        <div class="card-sm">
+          <div style="font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px">Omeprazole 20mg <span class="badge b-blue" style="font-weight:400;font-size:11px">Stomach</span></div>
+          <div style="font-size:13px;color:var(--text2)">Take 1 capsule before breakfast each day for 5 days. Protects your stomach while taking the antibiotic.</div>
+        </div>
+      </div>
+      <div class="alert a-amber" style="margin-top:10px">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span>Avoid alcohol while on this course. Complete the full 5-day antibiotic course.</span>
+      </div>`;
+  }, 2200);
+}
+
+// ── DOCTOR ADD MED ROW ────────────────────────────────────────
+function addMedRow() {
+  const list = document.getElementById('d-med-list');
+  const div = document.createElement('div');
+  div.className = 'med-row-inputs';
+  div.innerHTML = `<input type="text" placeholder="Medicine name"><input type="text" placeholder="Dose"><input type="text" placeholder="Duration"><input type="text" placeholder="Instructions" style="grid-column:1/-1">`;
+  list.appendChild(div);
+}
+
+// ── GENERATE RX ───────────────────────────────────────────────
+function generateRx() {
+  const out = document.getElementById('rx-output');
+  out.style.display = 'none';
+  setTimeout(() => { out.style.display = 'block'; out.scrollIntoView({behavior:'smooth',block:'start'}); }, 1100);
+}
+
+// ── DOCTOR PHARMACY SELECT ────────────────────────────────────
+let selPharmId = null;
+function selectPharm(el, id) {
+  document.querySelectorAll('#d-pharm-list .pharm-item').forEach(p => p.classList.remove('pharm-selected'));
+  el.classList.add('pharm-selected');
+  selPharmId = id;
+}
+
+// ── DOCTOR SEND ───────────────────────────────────────────────
+function doctorSend() {
+  if (!selPharmId) { alert('Select a pharmacy first.'); return; }
+  const btn = document.getElementById('d-send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Sending…';
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('d-send-success').style.display = 'flex';
+  }, 1800);
+}
+
+// ── PHARMACY VERIFY ───────────────────────────────────────────
+function pharmVerify() {
+  const res = document.getElementById('ph-verify-result');
+  res.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:10px 0"><span class="spin spin-navy"></span> Verifying…</div>';
+  setTimeout(() => {
+    res.innerHTML = `
+      <div class="alert a-green" style="margin-top:4px">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        <div><strong>Prescription verified · QR signature authentic</strong><br><small>Issued by Dr. Sharma · City Hospital · 12 Jun 2026</small></div>
+      </div>
+      <div class="card-sm" style="margin-top:2px">
+        <table class="med-table">
+          <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr><td>Amoxicillin 500mg</td><td>1 × 3 daily</td><td>5 days</td></tr>
+            <tr><td>Paracetamol 650mg</td><td>1 × 2 daily</td><td>3 days</td></tr>
+            <tr><td>Omeprazole 20mg</td><td>Before meals</td><td>5 days</td></tr>
+          </tbody>
+        </table>
+        <div class="alert a-amber" style="margin-top:10px">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span>Patient allergic to Penicillin — confirm Amoxicillin is safe before dispensing</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-success" style="flex:1;padding:10px">Confirm & Dispense</button>
+          <button class="btn btn-outline" style="flex:1;padding:10px">Suggest Generic</button>
+        </div>
+      </div>`;
+  }, 1800);
+}
+
+// ── PHARMACY TIMER ────────────────────────────────────────────
+let phTimerRunning = false, phTimerInterval;
+function startPhTimer() {
+  phTimerRunning = true;
+  let secs = 118;
+  phTimerInterval = setInterval(() => {
+    secs--;
+    const el = document.getElementById('ph-timer');
+    if (el) {
+      const m = Math.floor(secs/60), s = secs%60;
+      el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    }
+    if (secs <= 0) { clearInterval(phTimerInterval); pharmDeclineSOS(); }
+  }, 1000);
+}
+function pharmAcceptSOS() {
+  clearInterval(phTimerInterval);
+  document.getElementById('ph-timer').style.display = 'none';
+  document.getElementById('ph-sos-result').innerHTML = '<div class="alert a-green" style="margin-top:10px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg><div><strong>Accepted!</strong> Delivery partner Rahul S. assigned — MP 09 AB 1234</div></div>';
+}
+function pharmDeclineSOS() {
+  clearInterval(phTimerInterval);
+  document.getElementById('ph-timer').style.display = 'none';
+  document.getElementById('ph-sos-result').innerHTML = '<div class="alert a-amber" style="margin-top:10px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><span>Order forwarded to the next nearest pharmacy automatically.</span></div>';
+}
+
+// ── SOS LOCATION ──────────────────────────────────────────────
+function sosDetectLocation() {
+  const btn = document.getElementById('sos-loc-btn');
+  btn.textContent = 'Detecting…';
+  btn.disabled = true;
+  navigator.geolocation?.getCurrentPosition(
+    () => { document.getElementById('sos-address').value = 'Vijay Nagar, Indore, Madhya Pradesh 452010'; btn.textContent = '✓ Location detected'; },
+    () => { btn.textContent = 'Location denied — type address'; btn.disabled = false; }
+  ) ?? (document.getElementById('sos-address').value = 'Vijay Nagar, Indore, Madhya Pradesh 452010', btn.textContent = '✓ Location set');
+}
+
+// ── SOS SUBMIT ────────────────────────────────────────────────
+function submitSOS() {
+  if (!document.getElementById('sos-address').value.trim()) { alert('Please enter your delivery address.'); return; }
+  document.getElementById('sos-form').style.display = 'none';
+  document.getElementById('sos-loading').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('sos-load-text').textContent = 'Finding nearby pharmacies…';
+    setTimeout(() => {
+      document.getElementById('sos-loading').style.display = 'none';
+      document.getElementById('sos-broadcast').style.display = 'block';
+      runBroadcast();
+    }, 1600);
+  }, 1600);
+}
+
+function runBroadcast() {
+  const steps = [
+    { n:1, dot:'bph-1-dot', badge:'bph-1-badge', item:'bph-1', result:'declined', delay:0 },
+    { n:2, dot:'bph-2-dot', badge:'bph-2-badge', item:'bph-2', result:'declined', delay:2800 },
+    { n:3, dot:'bph-3-dot', badge:'bph-3-badge', item:'bph-3', result:'accepted', delay:5400 },
+  ];
+  steps.forEach(s => {
+    setTimeout(() => {
+      const item = document.getElementById(s.item);
+      if (item) item.style.opacity = '1';
+      const dot = document.getElementById(s.dot);
+      const badge = document.getElementById(s.badge);
+      if (dot) dot.className = 'bcast-dot bcast-contacting';
+      if (badge) { badge.className = 'badge b-amber'; badge.textContent = 'Checking stock…'; }
+      setTimeout(() => {
+        if (s.result === 'declined') {
+          if (dot) dot.className = 'bcast-dot bcast-declined';
+          if (badge) { badge.className = 'badge b-red'; badge.textContent = 'Declined'; }
+        } else {
+          if (dot) dot.className = 'bcast-dot bcast-accepted';
+          if (badge) { badge.className = 'badge b-green'; badge.textContent = 'Accepted ✓'; }
+          setTimeout(() => {
+            document.getElementById('sos-broadcast').style.display = 'none';
+            document.getElementById('sos-tracking').style.display = 'block';
+            advanceTracking();
+          }, 900);
+        }
+      }, 2000);
+    }, s.delay);
+  });
+}
+
+function advanceTracking() {
+  const steps = [
+    { id:'ts-2', sub:'ts-2-s', txt:'Packing medicines…', prog:'45', delay:4000 },
+    { id:'ts-3', sub:'ts-3-s', txt:'Rahul S. picked up · On the way', prog:'72', delay:9000, partner:true },
+    { id:'ts-4', sub:'ts-4-s', txt:'Delivered!', prog:'100', delay:16000, done:true },
+  ];
+  steps.forEach(s => {
+    setTimeout(() => {
+      const dot = document.getElementById(s.id);
+      const sub = document.getElementById(s.sub);
+      const prog = document.getElementById('sos-prog');
+      if (dot) dot.className = 'track-dot ' + (s.done ? 'td-done' : 'td-active');
+      if (sub) sub.textContent = s.txt;
+      if (prog) prog.style.width = s.prog + '%';
+      if (s.partner) document.getElementById('sos-partner-card').style.display = 'block';
+      if (s.done) document.getElementById('sos-delivered').style.display = 'block';
+    }, s.delay);
+  });
+}
+
+function resetSOS() {
+  ['sos-form','sos-loading','sos-broadcast','sos-tracking'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = id === 'sos-form' ? 'block' : 'none';
+  });
+  document.getElementById('sos-delivered').style.display = 'none';
+  document.getElementById('sos-partner-card').style.display = 'none';
+  document.getElementById('sos-address').value = '';
+  document.getElementById('sos-preview').innerHTML = '';
+  document.getElementById('sos-prog').style.width = '20%';
+  ['ts-2','ts-3','ts-4'].forEach(id => { const el = document.getElementById(id); if (el) el.className = 'track-dot td-wait'; });
+  const btn = document.getElementById('sos-loc-btn');
+  if (btn) { btn.textContent = 'Use my current location'; btn.disabled = false; }
+  [1,2,3,4].forEach(n => {
+    const dot = document.getElementById(`bph-${n}-dot`);
+    const badge = document.getElementById(`bph-${n}-badge`);
+    if (dot) dot.className = 'bcast-dot bcast-waiting';
+    if (badge) { badge.className = 'badge b-gray'; badge.textContent = n===1 ? 'Checking stock…' : 'Waiting…'; }
+    const item = document.getElementById(`bph-${n}`);
+    if (item && n > 1) item.style.opacity = '0.5';
+  });
+}
+</script>
+</body>
+</html>
