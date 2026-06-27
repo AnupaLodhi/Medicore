@@ -32,11 +32,15 @@ India faces a critical healthcare communication gap. Handwritten prescriptions a
 
 | Home | Patient Portal |
 |------|----------------|
-| ![Home](https://private-user-images.githubusercontent.com/171830819/604434437-347d0a0d-eeba-46b3-8df9-4de2dd7e11f4.png) | ![Patient](https://private-user-images.githubusercontent.com/171830819/604434767-dc093c85-68c3-43dd-bf67-f2085d469b22.png) |
+| ![Home](<img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 24 07 PM" src="https://github.com/user-attachments/assets/7b8241d6-a988-413e-8351-51439293d7c7" />
+) | ![Patient](<img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 22 30 PM" src="https://github.com/user-attachments/assets/52df478b-1aa6-4b2a-ac54-bd4066417397" />
+) |
 
 | Doctor Portal | Pharmacy Portal |
 |---------------|-----------------|
-| ![Doctor](https://private-user-images.githubusercontent.com/171830819/604434927-766eaf00-1a93-401b-9f73-4e3ba51e01ca.png) | ![Pharmacy](https://private-user-images.githubusercontent.com/171830819/604435090-b9f7c51c-5576-450f-8274-3ad0923f3ffa.png) |
+| ![Doctor](<img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 23 02 PM" src="https://github.com/user-attachments/assets/a58bfee1-c2ea-42ae-914d-a5c470f21831" />
+) | ![Pharmacy](<img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 22 42 PM" src="https://github.com/user-attachments/assets/084ad6f8-7ec7-4f00-a4ec-f414606c95a8" />
+) |
 
 ---
 
