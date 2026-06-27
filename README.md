@@ -32,15 +32,11 @@ India faces a critical healthcare communication gap. Handwritten prescriptions a
 
 | Home | Patient Portal |
 |------|----------------|
-| [Home] <img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 24 07 PM" src="https://github.com/user-attachments/assets/7b8241d6-a988-413e-8351-51439293d7c7" />
- | [Patient] <img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 22 30 PM" src="https://github.com/user-attachments/assets/52df478b-1aa6-4b2a-ac54-bd4066417397" />
- |
+| ![Home](https://github.com/user-attachments/assets/7b8241d6-a988-413e-8351-51439293d7c7) | ![Patient Portal](https://github.com/user-attachments/assets/52df478b-1aa6-4b2a-ac54-bd4066417397) |
 
 | Doctor Portal | Pharmacy Portal |
 |---------------|-----------------|
-| [Doctor]<img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 23 02 PM" src="https://github.com/user-attachments/assets/a58bfee1-c2ea-42ae-914d-a5c470f21831" />
- | [Pharmacy] <img width="1679" height="1007" alt="Screenshot 2026-06-27 at 1 22 42 PM" src="https://github.com/user-attachments/assets/084ad6f8-7ec7-4f00-a4ec-f414606c95a8" />
- |
+| ![Doctor Portal](https://github.com/user-attachments/assets/a58bfee1-c2ea-42ae-914d-a5c470f21831) | ![Pharmacy Portal](https://github.com/user-attachments/assets/084ad6f8-7ec7-4f00-a4ec-f414606c95a8) |
 
 ---
 
@@ -283,3 +279,4 @@ This project is licensed under the [MIT License](LICENSE) © 2026 Anupa Lodhi.
 <div align="center">
   <sub>Built with ❤️ for better healthcare in India</sub>
 </div>
+
