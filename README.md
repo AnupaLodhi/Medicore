@@ -9,7 +9,7 @@
 
 **Connecting Doctors, Pharmacies, and Patients Through Intelligent Healthcare Communication**
 
-[🌐 Live Demo](https://medi-bridge-ai-nu.vercel.app) &nbsp;·&nbsp; [📖 Docs](#installation) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/AnupaLodhi/medi-bridge-ai/issues) &nbsp;·&nbsp; [✨ Request Feature](https://github.com/AnupaLodhi/medi-bridge-ai/issues)
+[🌐 Live Demo](https://anupalodhi.github.io/Medicore/) &nbsp;·&nbsp; [📖 Docs](#installation) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/AnupaLodhi/medi-bridge-ai/issues) &nbsp;·&nbsp; [✨ Request Feature](https://github.com/AnupaLodhi/medi-bridge-ai/issues)
 
 </div>
 
